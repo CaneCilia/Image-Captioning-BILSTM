@@ -1,8 +1,17 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import sys
 import shutil
 import uuid
+
+# Add the parent directory (which contains 'src') to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    from src.inference import generate_caption
+except ImportError:
+    # Fallback if inference.py isn't fully implemented yet
+    generate_caption = None
 
 app = FastAPI(title=\"Image Captioning API\")
 
@@ -35,5 +44,22 @@ async def upload_image(file: UploadFile = File(...)):
     # Save the file
     with open(file_path, \"wb\") as buffer:
         shutil.copyfileobj(file.file, buffer)
+        
+    # If the model is fully implemented, we would run inference here
+    # For now, we will simulate the caption generation
+    caption = \"Placeholder generated caption\"
+    
+    if generate_caption:
+        try:
+            # We would pass the actual model_path and vocab here eventually
+            # caption = generate_caption(file_path, model_path='../models/bilstm_captioner.pth', vocab=...)
+            pass
+        except Exception as e:
+            print(f\"Inference error: {e}\")
 
-    return {\"filename\": unique_filename, \"message\": \"Image uploaded successfully\", \"file_path\": file_path}
+    return {
+        \"filename\": unique_filename, 
+        \"message\": \"Image uploaded successfully\", 
+        \"file_path\": file_path,
+        \"caption\": caption
+    }
