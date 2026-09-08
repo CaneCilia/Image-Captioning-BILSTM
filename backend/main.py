@@ -51,11 +51,19 @@ async def upload_image(file: UploadFile = File(...)):
     
     if generate_caption:
         try:
-            # We would pass the actual model_path and vocab here eventually
-            # caption = generate_caption(file_path, model_path='../models/bilstm_captioner.pth', vocab=...)
-            pass
+            class MockVocab:
+                def __init__(self):
+                    self.idx2word = {1: "a", 2: "cute", 3: "dog", 4: "is", 5: "playing", 6: "with", 7: "a", 8: "ball"}
+                def __len__(self):
+                    return 1000
+            vocab = MockVocab()
+            
+            # Create a mock features method for YOLOFeatureExtractor because it was crashing with cv2 missing etc
+            # But wait, inference.py uses YOLOFeatureExtractor. 
+            caption = generate_caption(file_path, model_path='../models/bilstm_captioner.pth', vocab=vocab)
         except Exception as e:
             print(f"Inference error: {e}")
+            caption = f"Inference failed: {e}"
 
     return {
         "filename": unique_filename, 

@@ -25,3 +25,7 @@ models/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# User Uploads
+backend/uploads/
+uploads/

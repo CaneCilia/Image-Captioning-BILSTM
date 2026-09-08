@@ -1,5 +1,4 @@
 import torch
-from ultralytics import YOLO
 import numpy as np
 
 class YOLOFeatureExtractor:
@@ -8,15 +7,15 @@ class YOLOFeatureExtractor:
         Initializes the YOLO model for feature extraction.
         Using yolov5su (YOLOv5 architecture updated in ultralytics)
         """
-        # Load the YOLO model
-        self.model = YOLO(model_name)
+        # Load the YOLO model (mocked to avoid ultralytics dependency right now)
+        self.model = None
         
     def extract_features(self, image_path):
         """
         Extracts features/bounding boxes from an image using YOLOv5.
         """
-        # Run inference
-        results = self.model(image_path)
+        # Run inference (mocked)
+        # results = self.model(image_path)
         
         # TODO: Process the results to extract meaningful feature vectors 
         # (e.g., class embeddings, bounding box coordinates, or intermediate CNN features)

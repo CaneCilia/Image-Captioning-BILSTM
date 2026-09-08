@@ -46,3 +46,16 @@ document.getElementById('imageInput').addEventListener('change', function() {
     const fileName = this.files.length > 0 ? this.files[0].name : "Click here to Select Image !!";
     document.querySelector('.custom-file-upload').textContent = fileName;
 });
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+    // Reset file input
+    document.getElementById('imageInput').value = '';
+    // Reset label text
+    document.querySelector('.custom-file-upload').textContent = "Click here to Select Image !!";
+    // Hide results section
+    document.getElementById('resultSection').style.display = 'none';
+    // Clear preview image
+    document.getElementById('previewImage').src = '';
+    // Clear caption text
+    document.getElementById('captionText').innerText = 'Generating...';
+});

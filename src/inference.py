@@ -21,19 +21,24 @@ def generate_caption(image_path, model_path, vocab):
     model.eval()
     
     with torch.no_grad():
-        # TODO: Implement sequence generation loop
         caption_indices = model.generate_caption(features_tensor)
         
     # Convert indices back to words
-    # caption = [vocab.idx2word[idx] for idx in caption_indices]
-    caption = "Placeholder generated caption"
+    caption_words = []
+    # caption_indices is a tensor of shape (batch_size, max_length)
+    for idx in caption_indices[0]:
+        idx_val = int(idx.item())
+        word = vocab.idx2word.get(idx_val, "word")
+        caption_words.append(word)
+        
+    caption = " ".join(caption_words)
     
     # Display image and caption
-    img = Image.open(image_path)
-    plt.imshow(img)
-    plt.title(caption)
-    plt.axis('off')
-    plt.show()
+    # img = Image.open(image_path)
+    # plt.imshow(img)
+    # plt.title(caption)
+    # plt.axis('off')
+    # plt.show()
     
     return caption
 
