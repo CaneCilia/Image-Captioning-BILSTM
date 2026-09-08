@@ -41,3 +41,8 @@ document.getElementById('uploadBtn').addEventListener('click', async () => {
         captionText.innerText = 'Error generating caption. Is the backend running?';
     }
 });
+
+document.getElementById('imageInput').addEventListener('change', function() {
+    const fileName = this.files.length > 0 ? this.files[0].name : "Click here to Select Image !!";
+    document.querySelector('.custom-file-upload').textContent = fileName;
+});

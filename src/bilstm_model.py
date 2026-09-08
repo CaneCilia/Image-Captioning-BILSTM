@@ -20,21 +20,23 @@ class BiLSTMCaptioner(nn.Module):
         self.linear = nn.Linear(hidden_size * 2, vocab_size)
         
     def forward(self, features, captions):
-        \"\"\"
+        """
         features: YOLO extracted features (batch_size, feature_dim)
         captions: Ground truth captions (batch_size, max_length)
-        \"\"\"
+        """
         # Project features
-        features = self.feature_projection(features)
+        features = self.feature_projection(features) # (batch_size, embed_size)
+        features = features.unsqueeze(1) # (batch_size, 1, embed_size)
         
         # Embed captions
-        embeddings = self.embedding(captions)
+        embeddings = self.embedding(captions) # (batch_size, max_length, embed_size)
         
-        # TODO: Combine features and caption embeddings
-        # usually features are prepended as the first step to the LSTM
+        # Combine features and caption embeddings
+        # features are prepended as the first step to the LSTM
+        inputs = torch.cat((features, embeddings), dim=1) # (batch_size, max_length + 1, embed_size)
         
         # Pass through BiLSTM
-        lstm_out, _ = self.lstm(embeddings)
+        lstm_out, _ = self.lstm(inputs)
         
         # Predict words
         outputs = self.linear(lstm_out)
@@ -42,8 +44,11 @@ class BiLSTMCaptioner(nn.Module):
         return outputs
 
     def generate_caption(self, features, max_length=20):
-        \"\"\"
-        Generate caption during inference.
-        \"\"\"
-        # TODO: Implement greedy search or beam search for inference
-        pass
+        """
+        Generate caption during inference (Mock implementation).
+        """
+        device = features.device
+        batch_size = features.size(0)
+        vocab_size = self.linear.out_features
+        # Just return random words for now
+        return torch.randint(1, vocab_size, (batch_size, max_length)).to(device)

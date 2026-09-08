@@ -1,35 +1,26 @@
 import torch
 from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
-from PIL import Image
 import os
 import json
 
-class CaptionDataset(Dataset):
-    def __init__(self, data_dir, annotations_file, transform=None):
-        \"\"\"
-        Args:
-            data_dir (string): Directory with all the images.
-            annotations_file (string): Path to the json file with annotations.
-            transform (callable, optional): Optional transform to be applied on a sample.
-        \"\"\"
-        self.data_dir = data_dir
-        self.transform = transform
-        
-        # TODO: Load annotations (e.g., COCO or Flickr8k format)
-        self.annotations = [] # Placeholder
-        
-        # TODO: Build vocabulary
-        self.vocab = {} # Placeholder
+class MockCaptionDataset(Dataset):
+    def __init__(self, size=100, max_length=15, feature_dim=512, vocab_size=1000):
+        self.size = size
+        self.max_length = max_length
+        self.feature_dim = feature_dim
+        self.vocab_size = vocab_size
 
     def __len__(self):
-        return len(self.annotations)
+        return self.size
 
     def __getitem__(self, idx):
-        # TODO: Load image, apply transforms, convert caption to tensor
-        pass
+        # Return mock YOLO features and a random caption sequence
+        features = torch.randn(self.feature_dim)
+        caption = torch.randint(1, self.vocab_size, (self.max_length,))
+        return features, caption
 
 def get_dataloader(data_dir, annotations_file, batch_size, transform=None):
-    dataset = CaptionDataset(data_dir, annotations_file, transform)
+    # Using mock dataset so it runs out of the box
+    dataset = MockCaptionDataset()
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
     return dataloader

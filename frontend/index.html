@@ -1,32 +1,35 @@
 <!DOCTYPE html>
-<html lang=\"en\">
+<html lang="en">
 <head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Captioning System</title>
-    <link rel=\"stylesheet\" href=\"styles.css\">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class=\"container\">
+    <div class="container">
         <h1>YOLOv5 + BiLSTM Image Captioning</h1>
         <p>Upload an image to generate a caption.</p>
         
-        <div class=\"upload-section\">
-            <input type=\"file\" id=\"imageInput\" accept=\"image/*\">
-            <button id=\"uploadBtn\">Generate Caption</button>
+        <div class="upload-section">
+            <label for="imageInput" class="custom-file-upload">
+                Click here to Select Image !!
+            </label>
+            <input type="file" id="imageInput" accept="image/*">
+            <button id="uploadBtn">Generate Caption</button>
         </div>
         
-        <div class=\"result-section\" id=\"resultSection\" style=\"display: none;\">
-            <div class=\"image-preview\">
-                <img id=\"previewImage\" src=\"\" alt=\"Uploaded Image\">
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="image-preview">
+                <img id="previewImage" src="" alt="Uploaded Image">
             </div>
-            <div class=\"caption-box\">
+            <div class="caption-box">
                 <h3>Generated Caption:</h3>
-                <p id=\"captionText\">Generating...</p>
+                <p id="captionText">Generating...</p>
             </div>
         </div>
     </div>
     
-    <script src=\"app.js\"></script>
+    <script src="app.js"></script>
 </body>
 </html>
