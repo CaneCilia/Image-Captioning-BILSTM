@@ -26,7 +26,7 @@ def generate_caption(image_path, model_path, vocab):
         
     # Convert indices back to words
     # caption = [vocab.idx2word[idx] for idx in caption_indices]
-    caption = \"Placeholder generated caption\"
+    caption = "Placeholder generated caption"
     
     # Display image and caption
     img = Image.open(image_path)
@@ -39,4 +39,4 @@ def generate_caption(image_path, model_path, vocab):
 
 if __name__ == '__main__':
     # test inference
-    print(\"Inference script ready.\")
+    print("Inference script ready.")

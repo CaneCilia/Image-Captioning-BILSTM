@@ -13,41 +13,41 @@ except ImportError:
     # Fallback if inference.py isn't fully implemented yet
     generate_caption = None
 
-app = FastAPI(title=\"Image Captioning API\")
+app = FastAPI(title="Image Captioning API")
 
 # Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[\"*\"],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=[\"*\"],
-    allow_headers=[\"*\"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-UPLOAD_DIR = \"uploads\"
+UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-@app.get(\"/\")
+@app.get("/")
 def read_root():
-    return {\"message\": \"Welcome to the Image Captioning API\"}
+    return {"message": "Welcome to the Image Captioning API"}
 
-@app.post(\"/upload-image/\")
+@app.post("/upload-image/")
 async def upload_image(file: UploadFile = File(...)):
-    if not file.content_type.startswith(\"image/\"):
-        raise HTTPException(status_code=400, detail=\"File provided is not an image.\")
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File provided is not an image.")
 
     # Generate a unique filename
-    file_extension = file.filename.split(\".\")[-1]
-    unique_filename = f\"{uuid.uuid4()}.{file_extension}\"
+    file_extension = file.filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4()}.{file_extension}"
     file_path = os.path.join(UPLOAD_DIR, unique_filename)
 
     # Save the file
-    with open(file_path, \"wb\") as buffer:
+    with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
         
     # If the model is fully implemented, we would run inference here
     # For now, we will simulate the caption generation
-    caption = \"Placeholder generated caption\"
+    caption = "Placeholder generated caption"
     
     if generate_caption:
         try:
@@ -55,11 +55,11 @@ async def upload_image(file: UploadFile = File(...)):
             # caption = generate_caption(file_path, model_path='../models/bilstm_captioner.pth', vocab=...)
             pass
         except Exception as e:
-            print(f\"Inference error: {e}\")
+            print(f"Inference error: {e}")
 
     return {
-        \"filename\": unique_filename, 
-        \"message\": \"Image uploaded successfully\", 
-        \"file_path\": file_path,
-        \"caption\": caption
+        "filename": unique_filename, 
+        "message": "Image uploaded successfully", 
+        "file_path": file_path,
+        "caption": caption
     }

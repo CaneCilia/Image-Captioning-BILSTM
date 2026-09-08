@@ -4,17 +4,17 @@ import numpy as np
 
 class YOLOFeatureExtractor:
     def __init__(self, model_name='yolov5su.pt'):
-        \"\"\"
+        """
         Initializes the YOLO model for feature extraction.
         Using yolov5su (YOLOv5 architecture updated in ultralytics)
-        \"\"\"
+        """
         # Load the YOLO model
         self.model = YOLO(model_name)
         
     def extract_features(self, image_path):
-        \"\"\"
+        """
         Extracts features/bounding boxes from an image using YOLOv5.
-        \"\"\"
+        """
         # Run inference
         results = self.model(image_path)
         

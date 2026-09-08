@@ -58,7 +58,7 @@ notebook = {
     "\n",
     "cnn_extractor = CNNFeatureExtractor()\n",
     "cnn_extractor.eval()\n",
-    "print(\"CNN Feature Extractor loaded.\")"
+    "print("CNN Feature Extractor loaded.")"
    ]
   },
   {
@@ -122,10 +122,10 @@ notebook = {
     "            \n",
     "    return objects, relations\n",
     "\n",
-    "sample_caption = \"A dog is playing with a red ball in the park.\"\n",
+    "sample_caption = "A dog is playing with a red ball in the park."\n",
     "objs, rels = extract_object_relations(sample_caption)\n",
-    "print(f\"Objects: {objs}\")\n",
-    "print(f\"Relations: {rels}\")"
+    "print(f"Objects: {objs}")\n",
+    "print(f"Relations: {rels}")"
    ]
   },
   {
