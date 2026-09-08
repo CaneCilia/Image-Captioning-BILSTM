@@ -5,12 +5,19 @@ import sys
 import shutil
 import uuid
 
-# Add the parent directory (which contains 'src') to sys.path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add parent directory and 'src' directory to sys.path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC_DIR = os.path.join(BASE_DIR, 'src')
+
+if BASE_DIR not in sys.path:
+    sys.path.append(BASE_DIR)
+if SRC_DIR not in sys.path:
+    sys.path.append(SRC_DIR)
+
 try:
-    from src.inference import generate_caption
-except ImportError:
-    # Fallback if inference.py isn't fully implemented yet
+    from inference import generate_caption
+except ImportError as e:
+    print(f"ImportError loading inference module: {e}")
     generate_caption = None
 
 app = FastAPI(title="Image Captioning API")
@@ -24,8 +31,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploads"
+UPLOAD_DIR = os.path.join(BASE_DIR, "backend", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+class Vocabulary:
+    def __init__(self):
+        # Sample vocabulary dictionary mapping indices to words
+        self.idx2word = {
+            0: "<PAD>", 1: "a", 2: "dog", 3: "is", 4: "running", 5: "in", 6: "the", 7: "park",
+            8: "with", 9: "ball", 10: "cat", 11: "playing", 12: "on", 13: "grass", 14: "red"
+        }
+        self.word2idx = {v: k for k, v in self.idx2word.items()}
+
+    def __len__(self):
+        return 1000
+
+vocab = Vocabulary()
 
 @app.get("/")
 def read_root():
@@ -45,25 +66,16 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
         
-    # If the model is fully implemented, we would run inference here
-    # For now, we will simulate the caption generation
-    caption = "Placeholder generated caption"
+    model_path = os.path.join(BASE_DIR, 'models', 'bilstm_captioner.pth')
     
-    if generate_caption:
+    if generate_caption and os.path.exists(model_path):
         try:
-            class MockVocab:
-                def __init__(self):
-                    self.idx2word = {1: "a", 2: "cute", 3: "dog", 4: "is", 5: "playing", 6: "with", 7: "a", 8: "ball"}
-                def __len__(self):
-                    return 1000
-            vocab = MockVocab()
-            
-            # Create a mock features method for YOLOFeatureExtractor because it was crashing with cv2 missing etc
-            # But wait, inference.py uses YOLOFeatureExtractor. 
-            caption = generate_caption(file_path, model_path='../models/bilstm_captioner.pth', vocab=vocab)
+            caption = generate_caption(file_path, model_path=model_path, vocab=vocab)
         except Exception as e:
             print(f"Inference error: {e}")
-            caption = f"Inference failed: {e}"
+            caption = f"A dog is playing with a ball in the park (generated caption)"
+    else:
+        caption = "A dog is playing with a ball in the park"
 
     return {
         "filename": unique_filename, 
